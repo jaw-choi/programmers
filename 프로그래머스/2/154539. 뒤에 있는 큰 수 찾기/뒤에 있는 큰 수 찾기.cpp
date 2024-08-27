@@ -3,27 +3,17 @@
 using namespace std;
 
 vector<int> solution(vector<int> numbers) {
-    vector<int> answer(numbers.size());
-    
+    vector<int> answer(numbers.size() , -1);
     stack<int> st;
     
-    for(int i = numbers.size() -1; i >= 0; i--)
+    for(int i=0 ; i<numbers.size();i++)
     {
-        while(1)
+        while(!st.empty() && numbers[st.top()] < numbers[i])
         {
-            if(st.empty())
-            {
-                answer[i] = -1;
-                break;
-            }
-            if(st.top() > numbers[i])
-            {
-                answer[i] = st.top();
-                break;
-            }
+            answer[st.top()] = numbers[i];
             st.pop();
         }
-        st.push(numbers[i]);
+        st.push(i);
     }
     return answer;
 }
