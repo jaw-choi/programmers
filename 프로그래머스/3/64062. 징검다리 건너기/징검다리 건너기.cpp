@@ -5,30 +5,33 @@
 using namespace std;
 
 int solution(vector<int> stones, int k) {
-    int answer = 0;
-
-    int begin = *min_element(stones.begin(), stones.end());
-    int end = *max_element(stones.begin(), stones.end());
-    int mid;
-    while (begin <= end) {
-        mid = (begin + end) / 2;
-
-        int skip_count = 0;
-        int max_skip_count = 0;
-        vector<int> tmp(stones);
-        for (int i = 0; i < tmp.size(); i++) {
-            tmp[i] -= mid;
-            if (tmp[i] < 0)
-                skip_count++;
+    
+    int begin = *min_element(stones.begin(),stones.end());
+    int end = *max_element(stones.begin(),stones.end());
+    int mid = 0;
+    int cnt = 0;
+    int maxSkip = 0;
+    int answer=0;
+    while(begin<=end)
+    {
+        mid = (begin+end)/2;
+        
+        cnt=0;
+        maxSkip=0;
+        for(int i=0;i<stones.size();i++)
+        {
+            if(stones[i] < mid)
+                cnt++;
             else
-                skip_count = 0;
-            max_skip_count = max(max_skip_count, skip_count);
+                cnt=0;
+            maxSkip = max(maxSkip,cnt);
         }
-
-        if (max_skip_count < k) {
+        
+        if(maxSkip < k){
+            begin = mid+1;
             answer = max(answer,mid);
-            begin = mid + 1;
-        } else {
+        }
+        else{
             end = mid - 1;
         }
     }
