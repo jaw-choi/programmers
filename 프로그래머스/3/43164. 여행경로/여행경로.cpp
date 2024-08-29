@@ -1,37 +1,33 @@
-#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
-vector<vector<string>> ticket;
-vector<string> answer;
-bool check[10001];
-bool isAnswer;
-
-void dfs(string start, int ticketCnt){
+bool DFS(string start, vector<vector<string>>& tickets, vector<bool>& visited, vector<string>& answer) {
     answer.push_back(start);
     
-    if (ticketCnt == ticket.size()) {
-        isAnswer = true;
-    }
-    
-    for (int i = 0; i < ticket.size(); i++) {
-        if (check[i]) continue;
-        if (ticket[i][0] == start) {
-            check[i] = true;
-            dfs(ticket[i][1], ticketCnt+1);
-            
-            if (!isAnswer) {
-                answer.pop_back();
-                check[i] = false;
-            }
+    // 모든 티켓을 사용해서 만들어진 경로는 티켓 개수 + 1이어야 함
+    if(answer.size() == tickets.size() + 1)
+        return true;
+
+    for(int i = 0; i < tickets.size(); i++) {
+        if(start == tickets[i][0] && !visited[i]) {
+            visited[i] = true;
+            if(DFS(tickets[i][1], tickets, visited, answer))
+                return true;
+            visited[i] = false;
         }
     }
     
+    answer.pop_back();
+    return false;
 }
 
 vector<string> solution(vector<vector<string>> tickets) {
+    vector<string> answer;
+    vector<bool> visited(tickets.size(), false);
     sort(tickets.begin(), tickets.end());
-    ticket = tickets;
-    dfs("ICN", 0);
-    
+    DFS("ICN", tickets, visited, answer);
     return answer;
 }
