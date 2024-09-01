@@ -14,7 +14,10 @@ int solution(vector<int> order) {
         {
             s.pop();
             answer++;
+                    if(!s.empty() && s.top()!=order[answer])
+            break;
         }
+
     }
     return answer;
 }
