@@ -1,21 +1,9 @@
 #include <string>
 #include <vector>
-
 #define MAX 1000001
 
 using namespace std;
-int helper(int x, int y, int n, int ans)
-{
-    if(x==y)
-        return ans;
-    
-    if(x*3 <= y)
-        return helper(x*3,y,n,ans+1);
-    if(x*2 <= y)
-        return helper(x*2,y,n,ans+1);
-    if(x+n <= y)
-        return helper(x+n,y,n,ans+1);
-}
+
 int solution(int x, int y, int n) {
     vector<int> dp(MAX,MAX);
     int answer = 0;
@@ -32,8 +20,9 @@ int solution(int x, int y, int n) {
                 dp[i-n] = min(dp[i]+1,dp[i-n]);
         }
     }
-    if(dp[x]==MAX)
-        return -1;   
     answer = dp[x];
+    
+    if(answer==MAX)
+        return -1;   
     return answer;
 }
