@@ -41,7 +41,7 @@ int solution(int cacheSize, vector<string> cities) {
         string smallCity = small(city);
         if(mp.find(smallCity)!=mp.end()) //hash에 존재
         {
-            mp[smallCity] = LRU;
+            mp[smallCity] = LRU; //있을때도 최신으로 업데이트**
             answer++;
         }            
         else                        //hash에 없음
@@ -50,11 +50,11 @@ int solution(int cacheSize, vector<string> cities) {
             {
                 //가장 작은 것을 찾아서 없앤 후 추가
                 Erase(mp);
-                mp[smallCity] = LRU;
+                mp[smallCity] = LRU; // 최신으로 업데이트
             }
             else //공간 있음
             {
-                mp[smallCity] = LRU;                
+                mp[smallCity] = LRU;        // 최신으로 업데이트         
             }
             
             answer+=5;
