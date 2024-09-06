@@ -6,9 +6,7 @@
 
 using namespace std;
 #define MAX 100001
-int ans = 100001;
 bool visited[MAX]={false};
-
 
 vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int destination) {
     vector<int> answer;
@@ -34,11 +32,12 @@ vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int 
         
     for(int i=0; i<mp[s].size();i++)
     {
-        if(visited[mp[s][i]]==false)
+        int curr = mp[s][i];
+        if(visited[curr]==false)
         {
-            visited[mp[s][i]] = true;
-            dist[mp[s][i]] = min(dist[mp[s][i]],d + 1);
-            q.push({mp[s][i],dist[mp[s][i]]});
+            visited[curr] = true;
+            dist[curr] = min(dist[curr],d + 1);
+            q.push({curr,dist[curr]});
         }
     }
         
@@ -54,9 +53,3 @@ vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int 
 
     return answer;
 }
-
-//1 2,4
-//2 1,4,5
-//3 
-//4 1,2,5
-//5 2,4
