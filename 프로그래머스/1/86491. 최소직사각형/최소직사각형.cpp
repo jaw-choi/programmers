@@ -10,19 +10,6 @@ void swap(vector<vector<int>>& s, int index)
     s[index][1] = tmp;
 }
 
-int findMax(vector<vector<int>> s, int index,int curr)
-{
-    int ans = 0;
-    for(int i=0;i<s.size();i++)
-    {
-        if(s[i][index]<curr)
-        {
-            ans = max(ans,s[i][index]);
-        }
-    }
-    return ans;
-}
-
 
 int solution(vector<vector<int>> sizes) {
     int answer = 0;
@@ -31,13 +18,8 @@ int solution(vector<vector<int>> sizes) {
 
     for(int i=0;i<sizes.size();i++)
     {
-        if(sizes[i][0] > sizes[i][1])
-            swap(sizes,i);
-    }
-    for(int i=0;i<sizes.size();i++)
-    {
-        max_1 = max(max_1,sizes[i][0]);
-        max_2 = max(max_2,sizes[i][1]);
+        max_1 = max(max_1, min(sizes[i][0],sizes[i][1]));
+        max_2 = max(max_2, max(sizes[i][0],sizes[i][1]));
     }
     
     return max_1 * max_2;
