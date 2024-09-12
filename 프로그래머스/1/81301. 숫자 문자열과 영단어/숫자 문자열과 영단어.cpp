@@ -56,10 +56,6 @@ int solution(string s) {
             tmp = "";
         }
     }
-    for(int i =0;i<ans.length();i++)
-    {
-        answer*=10;
-        answer += ans[i] -'0';
-    }
-    return answer;
+
+    return stoi(ans);
 }
