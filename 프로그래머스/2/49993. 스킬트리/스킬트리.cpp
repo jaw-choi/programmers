@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <unordered_map>
 
 using namespace std;
@@ -25,10 +24,8 @@ int solution(string skill, vector<string> skill_trees) {
                 else
                     break;
             }
-            if(i==sk.length()-1){
-                cout << sk <<endl;
+            if(i==sk.length()-1)
                 answer++;
-            }
         }
     }
     return answer;
