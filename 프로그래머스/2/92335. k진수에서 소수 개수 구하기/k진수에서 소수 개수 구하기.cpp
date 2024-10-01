@@ -1,45 +1,55 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 #include <iostream>
-#include <vector>
 #include <cmath>
+
 using namespace std;
 
-bool isPrime(long long num) {
-    if(num < 2) return false;
-        
-    for(int i=2; i<=sqrt(num); ++i) {
-        if(num % i == 0) return false;
-    }
-    return true;
+bool check(long long n) {
+    if (n <= 1) return false; // 1 이하는 소수가 아님
+    if (n == 2 || n == 3) return true; // 2와 3은 소수
+    if (n % 2 == 0 || n % 3 == 0) return false; // 2와 3으로 나누어 떨어지면 소수가 아님
 
+    // 6k +/- 1 형태의 수를 검사하여 소수 여부 확인
+    for (int i = 5; i <= sqrt(n); i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0)
+            return false;
+    }
+
+    return true;
 }
+
 int solution(int n, int k) {
     int answer = 0;
-    vector<pair<string, int>> v;
-    
-    //진수 구하기
-    string s = "";
-    while(n > 0) {
-        s += to_string(n % k);
-        n /= k;
+    string num = "";
+    //k진수로 변경
+    while(n>0)
+    {
+        char tmp = (n%k) + '0';
+        num = tmp + num;
+        n/=k;
     }
-    reverse(s.begin(), s.end());
-    //211020101011
+    //string p = "";
+    bool flag = false;
+    long long prime = 0;
+    int startIdx = 0;
+    int endIdx = 0;
+    //cout << num << endl;
     string tmp = "";
-    for (char c : s) { 
+    for (char c : num) { 
         if (c == '0') { 
-            if (!tmp.empty() && isPrime(stoll(tmp))) {
+            if (!tmp.empty() && check(stoll(tmp))) {
                 answer++; 
             } 
             tmp = ""; 
         } 
         else tmp += c; 
     }
-    
-    if (!tmp.empty() && isPrime(stoll(tmp))) {  //마지막꺼 
+    if (!tmp.empty() && check(stoll(tmp))) {  //마지막꺼 
         answer++;
     } 
+            
+    
+    
     return answer;
 }
