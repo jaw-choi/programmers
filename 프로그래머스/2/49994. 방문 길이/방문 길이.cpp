@@ -44,17 +44,9 @@ int solution(string dirs) {
         key += (curr[0] + 'f');
         key += (curr[1] + 'f');
         rev = reverse(key);
-        cout << key << endl;
-        cout << rev << endl;
         if(mp.find(key)==mp.end() && mp.find(rev)==mp.end())
         {
-            string start = "";
-            start += (key[0] +'0');
-            start += key[1] +'0';
-            string end = "";
-            end += key[2] + '0';
-            end += key[3] + '0';
-            if(start!=end)
+            if(key.substr(0,2)!=key.substr(2,2))
                 answer++;
         }
             mp[rev]++;
