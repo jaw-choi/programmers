@@ -5,7 +5,7 @@
 #define MAX 100001
 using namespace std;
 
-long long func(int n, vector<int> diffs, vector<int> times)
+long long func(int n, vector<int> diffs, vector<int> times, long long limit)
 {
     long long ans = 0;
     for(int i=0;i<diffs.size();i++)
@@ -18,6 +18,8 @@ long long func(int n, vector<int> diffs, vector<int> times)
         {
             ans += (diffs[i] - n) * (times[i] + times[i-1]) + times[i];
         }
+        if(ans > limit)
+            return limit + 1;
     }
     return ans;
 }
@@ -30,7 +32,7 @@ int solution(vector<int> diffs, vector<int> times, long long limit) {
     while(start <= end)
     {
         int mid = (start + end)/2;
-        if(func(mid,diffs,times) <= limit) // 실력이 너무 좋음 -> 낮춰도 됨
+        if(func(mid,diffs,times,limit) <= limit) // 실력이 너무 좋음 -> 낮춰도 됨
         {
             answer = mid;
             end = mid - 1;
