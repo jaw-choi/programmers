@@ -6,22 +6,21 @@
 using namespace std;
 
 int solution(vector<int> array) {
-    int answer = 0;
     int ans = 0;
-    sort(array.begin(),array.end());
+    int MaxN = 0;
+
     map<int,int> mp;
     for(auto a: array)
         mp[a]++;
-    map<int,int> cnt;
     for(auto m : mp)
     {
-        if(m.second > answer){
-            answer = m.second;
+        if(m.second > MaxN){
+            MaxN = m.second;
             ans = m.first;
         }
-        cnt[m.second]++;
+        else if(m.second == MaxN){
+            ans = -1;
+        }
     }
-    if(cnt[answer]>1)
-        return -1;
     return ans;
 }
