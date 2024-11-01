@@ -1,50 +1,46 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <iostream>
+#include <unordered_map>
 #include <queue>
-
+#include <algorithm>
 
 using namespace std;
 
 int solution(int n, vector<vector<int>> edge) {
     int answer = 0;
-    
-    vector<vector<int>> graph(n+1);
-    for(int i=0 ;i < edge.size();i++)
+    unordered_map<int,vector<int>> graph;
+    vector<int> visited(n+1,0);
+    vector<int> maxNum(n+1,0);
+    int max_distance = 0;
+    visited[1]=1;
+    for(auto e : edge)
     {
-        int from = edge[i][0];
-        int to = edge[i][1];
-        
-        graph[from].push_back(to);
-        graph[to].push_back(from);
+        graph[e[0]].push_back(e[1]);
+        graph[e[1]].push_back(e[0]);
     }
-    
-    vector<int> dist(n+1,-1);
-    queue<int> q;
-    dist[1] = 0;
-    q.push(1);
-    
+    queue<pair<int,int>> q;
+    q.push({1,0});//node,cost
     while(!q.empty())
     {
-        int current = q.front();
+        int curr = q.front().first;
+        int distance = q.front().second;
+
         q.pop();
+        // 최대 거리 갱신 및 해당 거리의 노드 수 계산
+        if (distance > max_distance) {
+            max_distance = distance;
+            answer = 1;
+        } else if (distance == max_distance) {
+            answer++;
+        }
         
-        for(int next : graph[current])
-        {
-            if(dist[next]==-1)
-            {
-                dist[next] = dist[current] + 1;
-                q.push(next);
+        for (auto neighbor : graph[curr]) {
+            if (visited[neighbor] == 0) {
+                q.push({neighbor, distance + 1});
+                visited[neighbor] = 1;
             }
         }
-    }
-    
-    int far = *max_element(dist.begin(),dist.end());
-    
-    for(auto d : dist)
-    {
-        if(d == far)
-            answer++;
     }
     return answer;
 }
