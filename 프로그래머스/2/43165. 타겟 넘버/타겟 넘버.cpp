@@ -2,23 +2,20 @@
 #include <vector>
 
 using namespace std;
-int answer = 0;
-
-void DFS(int cnt,int curr, vector<int> numbers,int target)
+void DFS(int curr,int sum,const vector<int>& numbers,int target,int& answer,int n)
 {
-    if(cnt==numbers.size()){
-        if(curr==target)
+    if(curr>=n){
+        if(target==sum)
+        {
             answer++;
+        }
         return;
     }
-    
-        DFS(cnt+1,curr+numbers[cnt],numbers,target);
-        DFS(cnt+1,curr-numbers[cnt],numbers,target);
-    
+    DFS(curr+1,sum+numbers[curr],numbers,target,answer,n);
+    DFS(curr+1,sum-numbers[curr],numbers,target,answer,n);
 }
 int solution(vector<int> numbers, int target) {
-    
-    DFS(0,0,numbers,target);
-
+    int answer = 0;
+    DFS(0,0,numbers,target,answer,numbers.size());
     return answer;
 }
