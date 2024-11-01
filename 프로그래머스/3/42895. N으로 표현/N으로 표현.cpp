@@ -41,7 +41,6 @@ void helper(vector<set<int>>& dp,int n,int idx)
 int solution(int N, int number) {
     if(N==number)
         return 1;
-    int answer = 0;
     vector<set<int>> dp(9);
     dp[1].insert(N);
     for(int i=2;i<=8;i++)
