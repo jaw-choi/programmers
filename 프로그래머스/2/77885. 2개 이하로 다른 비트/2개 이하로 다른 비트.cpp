@@ -3,14 +3,7 @@
 
 using namespace std;
 
-long long diff(long long num, long long other)
-{
-    
-}
-//1011 ->11
-//1100 ->12
-//1111 ->15
-//1101 ->13
+
 long long helper(long long num)
 {
     long long bit = 1;
@@ -20,9 +13,9 @@ long long helper(long long num)
             while (true) {
                 if ((num & bit) == 0)
                     break;
-                bit *= 2;
+                bit = bit << 1;
             }
-         bit = bit / 2;
+         bit = bit >>1;
     }
     return num + bit;
 }
