@@ -10,7 +10,7 @@ vector<int> solution(vector<int> sequence, int k) {
     int right = 0;
     int curr = sequence[left];
     int min = 1000001;
-    while(left <=right && right <= sequence.size())
+    while(left <=right && right < sequence.size())
     {
         if(curr < k){
             right++;
@@ -21,16 +21,14 @@ vector<int> solution(vector<int> sequence, int k) {
             left++;
         }
         else{            
-            if(right-left==0)
-                return {left,right};
-            else{
+
                 if(right - left < min){
                     answer = {left,right};
                     min = right - left;
                 }                
                 curr -= sequence[left];
                 left++;
-            }
+            
         }
     }
 
