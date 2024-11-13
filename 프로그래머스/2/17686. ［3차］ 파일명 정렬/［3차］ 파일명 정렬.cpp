@@ -1,59 +1,52 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <algorithm>
 
 using namespace std;
 
-struct fileName{
-    int index;
-    int num;
-    string head;
-};
 
-vector<fileName> v;
-
-bool cmp(const fileName& str1,const fileName& str2)
+string getHead(const string& str)
 {
-    if(str1.head == str2.head){
-        if(str1.num==str2.num){
-            return str1.index < str2.index;
-        }
-        else{
-            return str1.num < str2.num;
-        }
+    string ans;
+    for(auto c : str){
+        if(c>='0' && c<='9')
+            break;
+        else
+            ans+=tolower(c);
     }
-    
-    return str1.head < str2.head;
+    return ans;
+}
+int findNumIdx(const string &str)
+{
+    int i;
+    for (i = 0; i < str.length(); i++)
+    {
+        if (str[i] >= '0' && str[i] <= '9')
+            break;
+    }
+    return i;
+}
+int getNum(string str)
+{
+    return std::stoi(str.substr( findNumIdx(str) ));
+}
+bool cmpNum(const string& str1, const string& str2)
+{
+    return getNum(str1) < getNum(str2);
+}
+
+bool cmpHead(const string& str1, const string& str2)
+{
+    //string head1 = getHead(str1);
+    //string head2 = getHead(str2);
+    //return head1 < head2;
+    return getHead(str1).compare(getHead(str2)) < 0;
 }
 
 vector<string> solution(vector<string> files) {
-    //Head, Number, Tail
-    vector<string> answer;
-    for(int i = 0; i < files.size(); i++){
-        vector<int> idx;
-        for(int j = 0; j < files[i].size(); j++){
-            if('0' <= files[i][j] && files[i][j] <= '9'){
-                idx.push_back(j);
-            }
-        }
-        string head = "";
-        for(int j = 0; j < idx[0]; j++){
-            head += tolower(files[i][j]);
-        }
-        string number = files[i].substr(idx[0], idx.size());
-
-        fileName f;
-        f.index = i;
-        f.head = head;
-        f.num = stoi(number);
-
-        v.push_back(f);
-    }
-    sort(v.begin(),v.end(),cmp);
-    for(int i=0;i<files.size();i++)
-    {
-        answer.push_back(files[v[i].index]);
-    }
-    return answer;
+    stable_sort(files.begin(),files.end(),cmpNum);
+    stable_sort(files.begin(),files.end(),cmpHead);
+    
+    return files;
 }
+
