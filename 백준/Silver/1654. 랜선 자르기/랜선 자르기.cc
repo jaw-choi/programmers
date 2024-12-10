@@ -28,7 +28,7 @@ int main(void)
             tmp += (vec/mid);
         }
         if(tmp>=n){
-            answer = max(answer,mid);
+            answer = mid;
             left = mid + 1;
         }
         else{
