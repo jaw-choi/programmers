@@ -33,7 +33,6 @@ long long solution(int a, int b, vector<int> g, vector<int> s, vector<int> w, ve
     long long right = 10e15;
     long long mid;
     answer = right;
-    cout <<right;
     while(left<=right)
     {
         mid = (left+right)/2;
@@ -44,7 +43,6 @@ long long solution(int a, int b, vector<int> g, vector<int> s, vector<int> w, ve
         }
         else
             left = mid + 1;
-        cout << mid<<endl;
     }
     return answer;
 }
