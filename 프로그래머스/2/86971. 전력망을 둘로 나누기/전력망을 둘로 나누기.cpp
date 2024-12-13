@@ -1,31 +1,43 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <queue>
+#include <iostream>
 
 using namespace std;
-int dfs(int curr,int pre,unordered_map<int,vector<int>> graph,int& minSize,int n)
+int dfs(vector<vector<int>> tree, int left, int right)
 {
-    int sum = 1;
-    for(auto g : graph[curr])
+    int cnt = 0;
+    queue<vector<int>> q;
+    q.push(tree[left]);
+    while(!q.empty())
     {
-        if(g!=pre)
-        {
-            int count = dfs(g,curr,graph,minSize,n);
-            minSize = min(minSize,abs((n-count)-count));
-            sum += count;
+        vector<int> test = q.front();
+        q.pop();
+        for(auto t : test){
+            if(t!=right){
+                cnt+=dfs(tree,t,left);
+            }
+            else
+                cnt++;
         }
     }
-    return sum;
+    return cnt;
 }
+
 int solution(int n, vector<vector<int>> wires) {
-    int answer = -1;
-    int minSize = n;
-    unordered_map<int,vector<int>> graph;
-    for(auto a: wires)
+    int answer = 101;
+    vector<vector<int>> tree(n+1);
+    for(auto w : wires)
     {
-        graph[a[0]].push_back(a[1]);
-        graph[a[1]].push_back(a[0]);
+        tree[w[0]].push_back(w[1]);
+        tree[w[1]].push_back(w[0]);
     }
-    dfs(1,0,graph,minSize,n);
-    return minSize;
+    for(int i=0;i<wires.size();i++)
+    {
+        int cnt = dfs(tree,wires[i][0],wires[i][1]);
+        cout << cnt <<endl;
+        answer = min(answer, abs((n-2*cnt)));
+    }
+
+    return answer;
 }
