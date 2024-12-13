@@ -4,21 +4,14 @@
 #include <iostream>
 
 using namespace std;
-int dfs(vector<vector<int>> tree, int left, int right)
+int dfs(vector<vector<int>> tree, int node, int parent)
 {
-    int cnt = 0;
-    queue<vector<int>> q;
-    q.push(tree[left]);
-    while(!q.empty())
+    int cnt = 1;
+    for(auto neighbor : tree[node])
     {
-        vector<int> test = q.front();
-        q.pop();
-        for(auto t : test){
-            if(t!=right){
-                cnt+=dfs(tree,t,left);
-            }
-            else
-                cnt++;
+        if(neighbor!=parent)
+        {
+            cnt+=dfs(tree,neighbor,node);
         }
     }
     return cnt;
@@ -35,7 +28,6 @@ int solution(int n, vector<vector<int>> wires) {
     for(int i=0;i<wires.size();i++)
     {
         int cnt = dfs(tree,wires[i][0],wires[i][1]);
-        cout << cnt <<endl;
         answer = min(answer, abs((n-2*cnt)));
     }
 
