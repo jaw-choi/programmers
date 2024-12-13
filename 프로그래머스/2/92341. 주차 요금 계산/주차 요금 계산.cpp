@@ -1,64 +1,50 @@
 #include <string>
 #include <vector>
-#include <sstream>
 #include <map>
+#include <sstream>
 #include <iostream>
-#include <algorithm>
-#include <cmath>
 
 using namespace std;
-
-int calculate(vector<string> a)
+int timeToSec(string time)
 {
-    int ans = 0;
-    for (int i = 0; i < a.size() - 1; i+=2)
-    {
-        string sh{};
-        string sm{};
-        sh += a[i][0];
-        sh += a[i][1];
-        sm += a[i][3];
-        sm += a[i][4];
-
-        string eh{};
-        string em{};
-        eh += a[i+1][0];
-        eh += a[i+1][1];
-        em += a[i+1][3];
-        em += a[i+1][4];
-        int startTime = 60 * stoi(sh) + stoi(sm);
-        int endTime = 60 * stoi(eh) + stoi(em);
-        ans += endTime - startTime;
-    }
-    
-    return ans;
+    int hour = stoi(time.substr(0,2));
+    int min = stoi(time.substr(3,2));
+    return hour * 60 + min;
 }
 vector<int> solution(vector<int> fees, vector<string> records) {
+    int cnt = 0;
     vector<int> answer;
-
-    map<string, vector<string>> mp;
-    string time, car, state;
-    int f;
-    int tmp;
-    for (auto c : records)
+    string time,num,move;
+    map<string,int> mp;
+    for(auto r : records)
     {
-        stringstream ss(c);
-        ss >> time >> car >> state;
-        mp[car].push_back(time);
+        stringstream ss(r);
+        ss >> time >> num >> move;
+        if(move=="IN")
+            mp[num]-=timeToSec(time);
+        else
+            mp[num]+=timeToSec(time);
     }
-        vector<pair<string, vector<string>>> vec(mp.begin(), mp.end()); // map을 vector로 변경
-    sort(vec.begin(), vec.end());
-    for (auto m : mp)
+    for(auto& m : mp)
     {
-        if (m.second.size() % 2 != 0)
-            m.second.push_back("23:59");
-        int total = calculate(m.second);
-        int price = fees[1];
-        if (total > fees[0]) {
-            price += ceil((total - fees[0]) / (double)fees[2]) * fees[3];
+        if(m.second <= 0)
+            m.second += timeToSec("23:59");
+        //cout << cnt++ << " " << m.second << endl;
+    }
+    for(auto m : mp)
+    {
+        int fee = 0;
+        
+        if(m.second > fees[0]){
+            fee+=fees[1];
+            if((m.second - fees[0])%fees[2]==0)
+                fee +=((m.second - fees[0])/fees[2]) * fees[3];
+            else
+                fee += (((m.second - fees[0])/fees[2])+1) * fees[3];
         }
-        answer.push_back(price);
+        else
+            fee = fees[1];
+        answer.push_back(fee);
     }
-    
     return answer;
 }
