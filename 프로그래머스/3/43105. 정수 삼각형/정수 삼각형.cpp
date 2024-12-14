@@ -1,32 +1,16 @@
 #include <string>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
-
 int solution(vector<vector<int>> triangle) {
     int answer = 0;
-    int n = triangle.size();
-    int dp[n][n];
-    dp[0][0] = triangle[0][0];
-    cout <<dp[0][0]<<endl;
-    for(int i=1;i<triangle.size();i++)
+    for(int i = triangle.size()-1;i>0;i--)
     {
-        for(int j=0;j<triangle[i].size();j++)
+        for(int j=0;j<triangle[i].size()-1;j++)
         {
-            if(j==0){
-                dp[i][j] = triangle[i][j] + dp[i-1][j];
-            }
-            else if(j==triangle[i].size()-1){
-                dp[i][j] = triangle[i][j] + dp[i-1][j-1];
-            }
-            else{
-                dp[i][j] = triangle[i][j] + max(dp[i-1][j-1],dp[i-1][j]);
-            }
+            triangle[i-1][j] = triangle[i-1][j] + max(triangle[i][j],triangle[i][j+1]);
         }
     }
-    for(auto v:dp[triangle.size()-1])
-        answer = max(answer,v);
-    return answer;
+    return triangle[0][0];
 }
