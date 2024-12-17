@@ -6,37 +6,49 @@
 using namespace std;
 
 int solution(vector<int> info, vector<vector<int>> edges) {
-    vector<vector<int>> v(info.size());
-    for (int i = 0; i < edges.size(); i++) 
-        v[edges[i][0]].push_back(edges[i][1]);
-    
+    vector<vector<int>> graph(info.size());
+    for (const auto& edge : edges) {
+        graph[edge[0]].push_back(edge[1]);
+    }
+
     int answer = 1; // 최대 양의 수
-    queue<tuple<int, int, int, vector<int>>> q; // 큐: (현재 노드, 늑대 수, 양 수, 다음 노드 리스트)
-    
-    vector<int> nextNode(v[0].begin(), v[0].end());
-    q.push({0, 0, 0, nextNode}); // 초기 상태 enqueue
-    
+    queue<vector<int>> q; // 큐: [현재 노드, 늑대 수, 양 수, ...다음 노드 리스트]
+
+    vector<int> initial_state = {0, 0, 0};
+    for (int child : graph[0]) {
+        initial_state.push_back(child); // 루트 노드의 자식 노드들 추가
+    }
+    q.push(initial_state); // 초기 상태 enqueue
+
     while (!q.empty()) {
-        auto [curr_idx, w, s, nextNode] = q.front();
+        vector<int> state = q.front();
         q.pop();
-        
-        int animal = info[curr_idx];
-        if (animal == 0) s++;
-        else w++;
-        
-        answer = max(answer, s);
-        if (w >= s) continue; // 늑대가 양 이상인 경우 무효
-        
+
+        int curr_idx = state[0];
+        int wolf_count = state[1];
+        int sheep_count = state[2];
+
+        if (info[curr_idx] == 0) sheep_count++; // 양이면 양 카운트 증가
+        else wolf_count++; // 늑대면 늑대 카운트 증가
+
+        answer = max(answer, sheep_count);
+        if (wolf_count >= sheep_count) continue; // 늑대가 양 이상인 경우 무효
+
         // 다음 가능한 노드들을 탐색
-        for (int i = 0; i < nextNode.size(); i++) {
-            vector<int> next = nextNode; // 현재 상태 복사
-            next.erase(next.begin() + i); // 선택한 노드 제거
-            for (int child : v[nextNode[i]]) 
-                next.push_back(child); // 자식 노드 추가
-            
-            q.push({nextNode[i], w, s, next}); // 새로운 상태 enqueue
+        for (int i = 3; i < state.size(); i++) {
+            int next_node = state[i];
+            vector<int> next_state = {next_node, wolf_count, sheep_count};
+
+            for (int j = 3; j < state.size(); j++) {
+                if (i != j) next_state.push_back(state[j]); // 현재 선택된 노드를 제외한 나머지 노드들 추가
+            }
+            for (int child : graph[next_node]) {
+                next_state.push_back(child); // 선택한 노드의 자식 노드들 추가
+            }
+
+            q.push(next_state); // 새로운 상태 enqueue
         }
     }
-    
+
     return answer;
 }
