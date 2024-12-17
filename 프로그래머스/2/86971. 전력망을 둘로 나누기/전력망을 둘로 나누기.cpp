@@ -1,20 +1,15 @@
 #include <string>
 #include <vector>
-#include <iostream>
 
 using namespace std;
-
-int dfs(int node, int parent,const vector<vector<int>>& graph)
+int dfs(int node, int parent, const vector<vector<int>>& graph)
 {
     int cnt = 1;
     for(auto neighbor : graph[node])
     {
         if(neighbor != parent)
-        {
             cnt += dfs(neighbor,node,graph);
-        }
     }
-    //cout << cnt << endl;
     return cnt;
 }
 int solution(int n, vector<vector<int>> wires) {
