@@ -1,53 +1,34 @@
 #include <string>
 #include <vector>
-#include <queue>
-#include <unordered_map>
 #include <sstream>
-#include <iostream>
-#include <algorithm>
+#include <set>
+
+
 
 using namespace std;
 
 vector<int> solution(vector<string> operations) {
-    vector<int> answer(2,0);
-    unordered_map<int,int> mp;
-    vector<int> v;
+    vector<int> answer;
+    multiset<int> ms;
     
-    for(auto s : operations)
+    for(auto op : operations)
     {
-        string order;
-        int num;
-        stringstream ss(s);
+        stringstream ss(op);
+        char order;
+        string num;
         ss >> order >> num;
-        if(order =="I")
-        {
-            v.push_back(num);
-            mp[num]++;
+        if(order=='I'){
+            ms.insert(stoi(num));
         }
-        else if(order=="D")
-        {
-            if(v.size()!=0)
-            {
-                if(num==-1)
-                {
-                    sort(v.begin(),v.end());
-                    v.erase(v.begin());
-                }
-                else
-                {
-                    sort(v.rbegin(),v.rend());
-                    v.erase(v.begin());
-                }
+        else if(!ms.empty()){//oreder=='D'
+            if(stoi(num)==1){//erase max
+                ms.erase(--ms.end()); //////////////////
             }
-            
+            else//erase min
+                ms.erase(ms.begin());
         }
-        
     }
-    if(v.size()==0)
-        return answer;
-    else
-    {
-        sort(v.begin(),v.end());
-        return {v[v.size()-1],v[0]};
-    }
+    if(ms.empty())
+        return {0,0};
+    return {*ms.rbegin(),*ms.begin()};
 }
