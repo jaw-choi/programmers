@@ -1,70 +1,63 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <unordered_map>
+#include <queue>
+#include <iostream>
 
 using namespace std;
-
-int timeToMinute(string time)
+int strToInt(string time)
 {
-    return (time[0] - '0') * 600 + (time[1] - '0') * 60 +(time[3] - '0') * 10+(time[4] - '0');
+    int h1 = time[0] - '0';
+    int h2 = time[1] - '0';
+    int m1 = time[3] - '0';
+    int m2 = time[4] - '0';
+    return 600 * h1 + 60 * h2 + 10* m1  + m2;
 }
-
-string minuteToTime(int minute)
+int addTime(string time,int min)
 {
-    string ans="00:00";
-    int a = minute / 600;
-    int b = (minute % 600) / 60;
-    int c = ((minute % 600) % 60) / 10;
-    int d = (((minute % 600) % 60) % 10);
-    ans[0]= '0' + a;
-    ans[1]= '0' + b;
-    ans[3]= '0' + c;
-    ans[4]= '0' + d;
-    return ans;
+    return strToInt(time) + min;
 }
-
-string addTime(string currTime, int minute)
+int getLastTime(int n,int t, int m)
 {
-    int min = timeToMinute(currTime) + minute;
-    return minuteToTime(min);
+    return strToInt("09:00") + (n-1) * t;
 }
-
+string intToStr(int t)
+{
+    string time="";
+    time+=to_string(t/600);
+    t = t%600;
+    time+=to_string(t/60);
+    t = t%60;
+    time+=':';
+    time+=to_string(t/10);
+    t = t % 10;
+    time+=to_string(t);
+    return time;
+}
 string solution(int n, int t, int m, vector<string> timetable) {
-    string answer = "";
+
     sort(timetable.begin(),timetable.end());
-    unordered_map<string,vector<string>> mp;
-    string currTime = "09:00";
-    int index = 0;
-    for(int i=0;i<n;i++)
+    int busTime = strToInt("09:00");
+    int idx = 0;
+    for(int i=1;i<=n;i++)
     {
-        for(int j=0;j<m;j++)
+        int numGetOn = 0;
+        while(numGetOn < m && idx < timetable.size())
         {
-            if(index < timetable.size()){
-                if(timetable[index] > currTime)
-                    break;
-                mp[currTime].push_back(timetable[index]);
-                index++;
+            if(strToInt(timetable[idx]) <= busTime)
+            {
+                numGetOn++;
+                idx++;
             }
+            else break;
         }
-        if(i!=n-1)
-            currTime = addTime(currTime,t);
+        if(i==n)
+        {
+            if(numGetOn < m)
+                return intToStr(busTime);
+            return intToStr(strToInt(timetable[idx-1]) - 1);
+        }
+        busTime += t;
     }
-    sort(mp[currTime].begin(),mp[currTime].end());
-    string lastTime{};
-    if(mp[currTime].size() >= m)
-    {
-        lastTime = mp[currTime][m-1];
-        answer = addTime(lastTime, -1);
-    }
-    else
-    {
-        answer = currTime;
-    }
-    //n개의 map
-    //최대m개씩
-    //++t
-    //모두 찼을 때 가장 마지막 맵의 가장마지막멤버보다 1분 앞선 시간
-    //덜찼으면 가장 마지막맵의 출발시간과 동일
-    return answer;
+    return 0;
 }
