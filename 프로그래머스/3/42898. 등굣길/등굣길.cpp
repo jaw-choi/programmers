@@ -15,6 +15,7 @@ int solution(int m, int n, vector<vector<int>> puddles) {
     {
         for(int j=1;j<=m;j++)
         {
+            if(i==1&&j==1) continue;
             if(dp[i][j] == -1)
                 dp[i][j] = 0;
             else
