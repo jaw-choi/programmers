@@ -16,10 +16,8 @@ int solution(int n, vector<int> money) {
         {
             if(i-money[j] <0)
                 continue;
-            dp[i] += dp[i-money[j]];
-            //cout << i<<" "<<dp[i] << endl;
+            dp[i] += dp[i-money[j]]%1000000007;
         }
-            //cout << endl;
     }
     
    
