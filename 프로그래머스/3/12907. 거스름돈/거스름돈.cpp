@@ -1,31 +1,27 @@
 #include <string>
 #include <vector>
-#define MODULER 1000000007
+#include <algorithm>
+#include <iostream>
+
 using namespace std;
 
 int solution(int n, vector<int> money) {
     int answer = 0;
-    int DP[100000];
-    DP[0]=1;
-    for(int i=0;i<money.size();i++)
+    vector<int> dp(n+1,0);
+    dp[0]=1;
+    sort(money.begin(),money.end());
+    for(int j=0;j<money.size();j++)
     {
-        for(int j = money[i];j<=n;j++)
+        for(int i=1;i<=n;i++)
         {
-            DP[j] += DP[j - money[i]];
-            DP[j] %= MODULER;
-
+            if(i-money[j] <0)
+                continue;
+            dp[i] += dp[i-money[j]];
+            //cout << i<<" "<<dp[i] << endl;
         }
+            //cout << endl;
     }
-    return DP[n];
+    
+   
+    return dp[n];
 }
-
-//1 - 1
-//2 11,2  - 2
-//3 111,12 - 2
-//4 1111,112,22 - 3
-//5,11111,1112,122,5 - 4
-
-//6 111111,11112,1122,222,15 - 5
-
-//1 1,0,0
-//2 
