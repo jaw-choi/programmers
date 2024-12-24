@@ -3,29 +3,34 @@
 #include <sstream>
 #include <set>
 
-
-
 using namespace std;
 
 vector<int> solution(vector<string> operations) {
     vector<int> answer;
     multiset<int> ms;
-    
+    string order;
+    string num;
     for(auto op : operations)
     {
         stringstream ss(op);
-        char order;
-        string num;
-        ss >> order >> num;
-        if(order=='I'){
+        ss>>order>>num;
+        if(order=="I")
+        {
             ms.insert(stoi(num));
         }
-        else if(!ms.empty()){//oreder=='D'
-            if(stoi(num)==1){//erase max
-                ms.erase(--ms.end()); //////////////////
+        else//D
+        {
+            if(!ms.empty())
+            {
+                if(num=="-1")
+                {
+                    ms.erase(ms.begin());
+                }
+                else
+                {
+                    ms.erase(prev(ms.end()));
+                }
             }
-            else//erase min
-                ms.erase(ms.begin());
         }
     }
     if(ms.empty())
