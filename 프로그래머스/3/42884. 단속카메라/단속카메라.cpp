@@ -10,7 +10,7 @@ bool cmp(const vector<int>& a, const vector<int>& b)
 int solution(vector<vector<int>> routes) {
     int answer = 1;
     sort(routes.begin(),routes.end(),cmp);
-    //[[-20,-15],[-18,-13], [-14,-5], [-5,-3]]
+
     int right = routes[0][1];
     for(int i=1;i<routes.size();i++)
     {
