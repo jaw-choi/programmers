@@ -13,16 +13,11 @@ int solution(vector<int> people, int limit) {
     //50,50,70,80
     while(left<=right)
     {
-        int sum = people[right] + people[left];
-        if(sum > limit){
-            right--;
-            answer++;
-        }
-        else if(sum <= limit){
-            right--;
+        if(people[right] + people[left] <= limit){
             left++;
-            answer++;
         }
+        right--;
+        answer++;
     }
     return answer;
 }
