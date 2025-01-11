@@ -1,42 +1,44 @@
 #include <string>
 #include <vector>
-#include <algorithm>
-
+#include <iostream>
+#include <queue>
+#include <tuple> // for std::tuple
+#define INF 10000000
 using namespace std;
 
-vector<int> island(101);
-
-bool cmp(vector<int> a , vector<int> b)
-{
-    return a[2]<b[2];
-}
-
-int findParents(int num)
-{
-    if(island[num] == num)
-        return num;
-    return findParents(island[num]);
-}
-
 int solution(int n, vector<vector<int>> costs) {
-    int answer = 0;
-    sort(costs.begin(),costs.end(),cmp);
+    vector<vector<pair<int, int>>> graph(n);
     
-    for(int i=0;i<n;i++)
-    {
-        island[i] = i;
+    // 그래프 초기화
+    for (const auto& c : costs) {
+        int u = c[0], v = c[1], cost = c[2];
+        graph[u].emplace_back(v, cost);
+        graph[v].emplace_back(u, cost);
     }
-    for(int i=0;i<costs.size();i++)
-    {
-        int start = findParents(costs[i][0]);
-        int end = findParents(costs[i][1]);
-        int cost = costs[i][2];
+    
+    // 프림 알고리즘
+    vector<bool> visited(n, false);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+    pq.emplace(0, 0); // 비용 0, 시작 노드 0
+    
+    int mst_cost = 0;
+    int edges_used = 0;
+    
+    while (!pq.empty() && edges_used < n) {
+        auto [cost, current] = pq.top();
+        pq.pop();
         
-        if(start!=end)
-        {
-            answer += cost;
-            island[end] = start;
+        if (visited[current]) continue;
+        visited[current] = true;
+        mst_cost += cost;
+        edges_used++;
+        
+        for (const auto& [next, next_cost] : graph[current]) {
+            if (!visited[next]) {
+                pq.emplace(next_cost, next);
+            }
         }
     }
-    return answer;
+    
+    return mst_cost;
 }
