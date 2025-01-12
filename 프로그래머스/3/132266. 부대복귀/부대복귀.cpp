@@ -1,55 +1,38 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include <algorithm>
+#include <map>
 #include <queue>
 
 using namespace std;
-#define MAX 100001
-bool visited[MAX]={false};
 
 vector<int> solution(int n, vector<vector<int>> roads, vector<int> sources, int destination) {
-    vector<int> answer;
-    vector<int> dist(n+1);
-    unordered_map<int,vector<int>> mp;
+    vector<int> answer(sources.size(),-1);
+    map<int,vector<int>> mp;
+    queue<int> q;
     for(auto r : roads)
     {
         mp[r[0]].push_back(r[1]);
         mp[r[1]].push_back(r[0]);
     }
-    for(int i=1;i<=n;i++)
-        dist[i] = MAX;
-    
-    queue<pair<int,int>> q;
-    q.push({destination,0});
-    dist[destination] = 0;
-    
+    vector<int> distance(n+1,-1);
+    distance[destination] = 0;
+    q.push(destination);
     while(!q.empty())
     {
-        int s = q.front().first;
-        int d = q.front().second;
+        int curr = q.front();
         q.pop();
         
-    for(int i=0; i<mp[s].size();i++)
-    {
-        int curr = mp[s][i];
-        if(visited[curr]==false)
+        for(auto m : mp[curr])
         {
-            visited[curr] = true;
-            dist[curr] = min(dist[curr],d + 1);
-            q.push({curr,dist[curr]});
+            if(distance[m]==-1){
+                distance[m] = distance[curr] + 1;
+                q.push(m);
+            }
         }
     }
-        
-        
-    }
-    for(auto s : sources)
+    for(int i=0;i<sources.size();i++)
     {
-        if(dist[s]==MAX)
-            answer.push_back(-1);
-        else
-            answer.push_back(dist[s]);
+        answer[i] = (distance[sources[i]]);
     }
-
     return answer;
 }
