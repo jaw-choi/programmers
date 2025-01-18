@@ -14,31 +14,21 @@ int solution(vector<int> a) {
     int min = a[0];
     for(int i=0;i<a.size();i++)
     {
-        if(a[i] > min){
-            left[i] = min;
-        }
-        else{
+        if(a[i] <= min)
             min = a[i];
-            left[i] = min;
-        }
+        left[i] = min;
     }
     min = a[a.size()-1];
     for(int i=a.size()-1;i>=0;i--)
     {
-        if(a[i] > min){
-            right[i] = min;
-        }
-        else{
+        if(a[i] <= min)
             min = a[i];
-            right[i] = min;
-        }
+        right[i] = min;        
     }
 
     for(int i=1;i<a.size()-1;i++)
     {
-        if(left[i-1] < a[i] && right[i+1] < a[i])
-            continue;
-        else
+        if(left[i-1] >= a[i] || right[i+1] >= a[i])
             answer++;
     }
     return answer;
