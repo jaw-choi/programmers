@@ -6,29 +6,41 @@
 using namespace std;
 
 int solution(vector<int> a) {
-    int answer = 0;
+    if(a.size()<=2)
+        return a.size();
+    int answer = 2;
     vector<int> left(a.size(),0);
     vector<int> right(a.size(),0);
-    int lmin = a[0];
+    int min = a[0];
     for(int i=0;i<a.size();i++)
     {
-        if(lmin > a[i])
-            lmin = a[i];
-        left[i] = lmin;
+        if(a[i] > min){
+            left[i] = min;
+        }
+        else{
+            min = a[i];
+            left[i] = min;
+        }
     }
-    int rmin = a[a.size()-1];
+    min = a[a.size()-1];
     for(int i=a.size()-1;i>=0;i--)
     {
-        if(rmin > a[i])
-            rmin = a[i];
-        right[i] = rmin;
+        if(a[i] > min){
+            right[i] = min;
+        }
+        else{
+            min = a[i];
+            right[i] = min;
+        }
     }
-    for(int i=0;i<a.size();i++)
+
+    for(int i=1;i<a.size()-1;i++)
     {
-        if(a[i] <= left[i] || a[i] <= right[i])
+        if(left[i-1] < a[i] && right[i+1] < a[i])
+            continue;
+        else
             answer++;
     }
     return answer;
 }
-//-16,-16,-16,-16,-16,-92,-92,-92,-92,-92
-//-92,-92-,92-,92,-92,-92,-71,-68,-61,-33
+
