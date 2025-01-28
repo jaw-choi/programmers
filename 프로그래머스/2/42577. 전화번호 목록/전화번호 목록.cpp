@@ -1,27 +1,20 @@
 #include <string>
 #include <vector>
-#include <iostream>
-#include <unordered_map>
+#include <algorithm>
 
 using namespace std;
-
 bool solution(vector<string> phone_book) {
-   // 1. HashMap을 만든다.
-    unordered_map<string, int> map;
-    for (int i = 0; i < phone_book.size(); i++)
-        map[phone_book[i]] = 1;
 
-    // 2. 모든 전화번호의 substring이 HashMap에 존재하는지 확인한다.
-    for (int i = 0; i < phone_book.size(); i++)
+    sort(phone_book.begin(), phone_book.end());
+
+    for(size_t i =0 ; i< phone_book.size() - 1 ; i++)
     {
-        for (int j = 0; j < phone_book[i].size() - 1; j++)
+        if(phone_book[i+1].find(phone_book[i])==0)
         {
-            string phone_number = phone_book[i].substr(0, j + 1);
-            if (map[phone_number])
-                return false;
+            return false;
         }
+
     }
 
-    // 3. 여기까지 오면 접두어가 없다는 것이다.
     return true;
 }
