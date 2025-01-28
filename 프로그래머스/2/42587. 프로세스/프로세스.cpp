@@ -1,45 +1,37 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <utility>
 
 using namespace std;
 
 int solution(vector<int> priorities, int location) {
     int answer = 0;
-    pair<int,int> pa;
-    int idx=0;
-    priority_queue<int,vector<int>,less<int>> pq;
-    queue<pair<int,int>> q;
-    for(auto p : priorities)
-    {
-        pq.push(p);
-        q.push(make_pair(p,idx++));
-    }
+    priority_queue<pair<int,int>,vector<pair<int,int>>,less<pair<int,int>>> pq;
+    queue<pair<int,int>> q;//priorities,location
     int cnt = 1;
-    while(true)
+    for(int i=0;i<priorities.size();i++)
+    {
+        pq.push({priorities[i],i});
+        q.push({priorities[i],i});
+    }
+    while(!q.empty())
     {
         auto tmp = q.front();
         q.pop();
-        if(tmp.first != pq.top()){
-            q.push(tmp);
-        }
-        else{
+        if(tmp.first==pq.top().first)
+        {
             if(tmp.second==location)
                 return cnt;
             else{
-                cnt++;
                 pq.pop();
+                cnt++;
             }
         }
+        else
+        {
+            
+            q.push(tmp);
+        }
     }
-    
     return answer;
 }
-//2132
-//1322
-//3221
-//221
-//21
-//1
-//CDA
