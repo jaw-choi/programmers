@@ -1,66 +1,49 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
-
+#include <map>
+#include <iostream>
+#define MAX 100005
 using namespace std;
-
-void Erase(unordered_map<string,int>& map)
+void makeLower(string& str)
 {
-    int min = 100001;
-    string city{};
-    for(auto m : map)
+    for(auto& s : str)
     {
-        if(m.second < min){
-            min = m.second;
-            city = m.first;
-        }            
+        if(s>='A' && s<='Z')
+            s +=32;
     }
-    map.erase(city);
 }
-string small(string city)
+void LRU(map<string,int>& mp)
 {
-    string ans{};
-    for(auto c : city)
+    string tmp;
+    int minVal=MAX;
+    for(auto m : mp)
     {
-        if(c>='A' && c <= 'Z')
-            c = (c-'A') + 'a';
-        ans+=c;
+        if(m.second < minVal)
+        {
+            minVal = m.second;
+            tmp = m.first;
+        }
     }
-    return ans;
+    mp.erase(tmp);
 }
 int solution(int cacheSize, vector<string> cities) {
     int answer = 0;
-    if(cacheSize == 0){
-        answer = cities.size()*5;
-        return answer;
-    }
-    unordered_map<string,int> mp;
-    int LRU = 0;
-    for(auto city : cities)
+    int idx = 0;
+    if(cacheSize==0)
+        return cities.size()*5;
+    map<string,int> mp;
+    for(auto c : cities)
     {
-        string smallCity = small(city);
-        if(mp.find(smallCity)!=mp.end()) //hash에 존재
+        makeLower(c);
+        if(mp.find(c)==mp.end())
         {
-            mp[smallCity] = LRU; //있을때도 최신으로 업데이트**
-            answer++;
-        }            
-        else                        //hash에 없음
-        {
-            if(mp.size()==cacheSize) //full
-            {
-                //가장 작은 것을 찾아서 없앤 후 추가
-                Erase(mp);
-                mp[smallCity] = LRU; // 최신으로 업데이트
-            }
-            else //공간 있음
-            {
-                mp[smallCity] = LRU;        // 최신으로 업데이트         
-            }
-            
+            if(mp.size()>=cacheSize)//delete oldest one
+                LRU(mp);
             answer+=5;
         }
-        LRU++;
+        else
+            answer++;
+        mp[c] = idx++;
     }
     return answer;
 }
-//
