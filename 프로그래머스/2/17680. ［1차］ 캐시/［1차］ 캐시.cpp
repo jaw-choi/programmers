@@ -4,8 +4,10 @@
 #include <iostream>
 #define MAX 100005
 #define DIFF 32
+#define MISSTIME 5
+#define HITTIME 1
 using namespace std;
-void makeLower(string& str)
+void MakeLower(string& str)
 {
     for(auto& s : str)
     {
@@ -31,19 +33,19 @@ int solution(int cacheSize, vector<string> cities) {
     int answer = 0;
     int idx = 0;
     if(cacheSize==0)
-        return cities.size()*5;
+        return cities.size()*MISSTIME;
     map<string,int> mp;
     for(auto c : cities)
     {
-        makeLower(c);
+        MakeLower(c);
         if(mp.find(c)==mp.end())
         {
             if(mp.size()>=cacheSize)//delete oldest one
                 LRU(mp);
-            answer+=5;
+            answer+=MISSTIME;
         }
         else
-            answer++;
+            answer+=HITTIME;
         mp[c] = idx++;
     }
     return answer;
