@@ -3,13 +3,14 @@
 #include <map>
 #include <iostream>
 #define MAX 100005
+#define DIFF 32
 using namespace std;
 void makeLower(string& str)
 {
     for(auto& s : str)
     {
         if(s>='A' && s<='Z')
-            s +=32;
+            s +=DIFF;
     }
 }
 void LRU(map<string,int>& mp)
