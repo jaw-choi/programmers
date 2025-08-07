@@ -1,32 +1,32 @@
 #include <string>
-#include <algorithm>
-#include <vector> 
-#include <iostream>
+#include <vector>
 #include <queue>
 
 using namespace std;
 
 long long solution(int n, vector<int> works) {
     long long answer = 0;
-    priority_queue<int> pq;
-    for(int i = 0 ; i < works.size() ; i++){
-        pq.push(works[i]);
+    priority_queue<int,vector<int>> pq;
+    for(auto w : works)
+    {
+        pq.push(w);
     }
-    for(int i = 0 ; i < n ; i++){
-        int temp = pq.top();
+    while(!pq.empty())
+    {
+        if(n==0)
+            break;
+        int num = pq.top();
         pq.pop();
-        
-        if(temp > 0){
-            pq.push(temp-1);
-        }
-        else{
-            pq.push(0);
-        }
+        num--;
+        n--;
+        pq.push(num);
     }
-    while (!pq.empty()) {
-        int sum = pq.top();
+    while(!pq.empty())
+    {
+        int tmp = pq.top();
         pq.pop();
-        answer += sum * sum;
+        if(tmp>=0)
+            answer += (tmp*tmp);
     }
     return answer;
 }
