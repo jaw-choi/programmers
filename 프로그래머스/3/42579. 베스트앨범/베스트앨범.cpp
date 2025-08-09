@@ -1,51 +1,66 @@
 #include <string>
 #include <vector>
+#include <queue>
 #include <map>
+#include <algorithm>
+
 using namespace std;
- 
+
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
-    //각 장르별로 횟수저장
-    map<string, int> music;
-    //각 장르별로 무슨노래가 몇번씩 저장됬는지
-    map<string, map<int, int>> musiclist;
-    //들어온 리스트만큼 반복
-    for (int i = 0; i < genres.size(); i++) {
-        //music map에 장르별로 횟수추가
-        music[genres[i]] += plays[i];
-        //musiclist map에 노래번호와 플레이횟수 추가
-        musiclist[genres[i]][i] = plays[i];
-    }
+    map<string,
+    priority_queue<
+        vector<int>,
+        vector<vector<int>>,
+        less<vector<int>>>> mp;
     
-    //장르가 다없어질때까지 반복
-    while (music.size() > 0) {
-        string genre{};
-        int max{0};
-        //장르중에서 제일높은것 찾기
-        for (auto mu : music){
-            if (max < mu.second){
-                max = mu.second;
-                genre = mu.first;
-            }
-        }
-        //2곡을 넣어야하므로 2번반복
-        for (int i = 0; i < 2; i++){
-            int val = 0, ind = -1;
-            //노래중에서 제일높은것 찾기
-            for (auto ml : musiclist[genre]) {
-                if (val < ml.second) {
-                    val = ml.second;
-                    ind = ml.first;
+    map<string,int> ump;
+    for(int i=0;i<genres.size();i++)
+    {
+        mp[genres[i]].push({plays[i],i});
+        ump[genres[i]] += plays[i];
+    }
+    vector<pair<int,string>> v;
+    for(auto m : ump)
+    {
+        v.push_back(make_pair(m.second,m.first));
+    }
+    sort(v.rbegin(),v.rend());
+    for(int i=0;i<v.size();i++)
+    {
+        auto curr = v[i].second;
+        int cnt = 2;
+        if(mp[curr].size()>=2)
+        {
+            int first = mp[curr].top()[0];
+            int firstIndex = mp[curr].top()[1];
+            mp[curr].pop();
+            int second = mp[curr].top()[0];
+            int secondIndex = mp[curr].top()[1];
+            if(first==second){
+                if(secondIndex < firstIndex)
+                {
+                    answer.push_back(secondIndex);
+                    answer.push_back(firstIndex);
                 }
             }
-            //만약 노래가 0~1곡밖에없다면 반복문 탈출
-            if (ind == -1)    break;
-            //리턴할 리스트에 노래번호 추가
-            answer.push_back(ind);
-            musiclist[genre].erase(ind);
+            else
+            {
+                    answer.push_back(firstIndex);
+                    answer.push_back(secondIndex);
+            }
         }
-        //map 에서 사용한 장르삭제
-        music.erase(genre);
+        else{
+            answer.push_back(mp[curr].top()[1]);
+        }
+        // while(!mp[curr].empty())
+        // {
+        //     answer.push_back(mp[curr].top()[1]);
+        //     mp[curr].pop();
+        //     cnt--;
+        //     if(cnt==0)
+        //         break;
+        // }
     }
     return answer;
 }
