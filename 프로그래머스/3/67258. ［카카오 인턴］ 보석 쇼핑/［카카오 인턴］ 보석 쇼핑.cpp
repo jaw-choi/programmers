@@ -1,52 +1,36 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <set>
+#include <map>
+#include <iostream>
 
 using namespace std;
 
 vector<int> solution(vector<string> gems) {
-    vector<int> answer(2,0);
-    unordered_map<string,int> mp1;
-    for(auto g:gems)
-        mp1[g]++;
-    unordered_map<string,int> mp;
-    
-    int size_ = mp1.size();
-    int left = 0;
-    int right = 0;
-    int len = 100001;
-    int i = 0;
-    while(right < gems.size())
+    vector<int> answer = {0,100001};
+    set<string> s;
+    map<string,int> mp;
+    int left=0;
+    for(auto& g : gems)
     {
-        for(i=right;i<gems.size();i++)
-        {
-            mp[gems[i]]++;
-            if(mp.size()==size_)
-            {
-                right = i;
-                break;
+        s.insert(g);
+    }
+    int size_ = s.size();
+    for(int right=0;right<gems.size();right++)
+    {
+        mp[gems[right]]++;
+        if(mp.size()==size_){
+            while(mp.size()==size_){
+            if(answer[1]-answer[0] > right - left){
+                answer = {left+1,right+1};
+            }
+                mp[gems[left]]--;
+                if(mp[gems[left]]==0){
+                    mp.erase(gems[left]);
+                }
+                left++;
             }
         }
-        if(i==gems.size())
-            break;
-        
-        for(i=left;i<gems.size();i++)
-        {
-                if(mp[gems[i]]==1){
-                    left=i;
-                    break;
-                }
-            else
-                mp[gems[i]]--;
-        }
-        if( len > right - left){
-            len = right - left;
-            answer[0]=left+1;
-            answer[1]=right+1;
-        }
-        mp.erase(gems[left]);
-        left++;
-        right++;
     }
     return answer;
 }
