@@ -1,27 +1,28 @@
-#include <vector>
-using namespace std;
- 
-int Install(int Start, int End, int W)
-{
-    int Install_Range = End - Start + 1;
-    int Cover_Range = W * 2 + 1;
- 
-    if (Install_Range <= 0) return 0;
-    if (Install_Range % Cover_Range == 0) return Install_Range / Cover_Range;
-    return (Install_Range / Cover_Range) + 1;
-}
- 
-int solution(int n, vector<int> stations, int w)
-{
-    int answer = 0;
- 
-    for (int i = 0; i < stations.size(); i++)
-    {
-        if (i == 0) answer = answer + Install(1, stations[i] - w - 1, w);
-        else answer = answer + Install(stations[i - 1] + w + 1, stations[i] - w - 1, w);
-    }
-    answer = answer + Install(stations[stations.size() - 1] + w + 1, n, w);
- 
-    return answer;
-}
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
 
+int solution(int n, vector<int> stations, int w)
+{
+    int answer = 0;
+    int cover = 2*w+1;
+    int left = 1;
+    for(int i=0;i<stations.size();i++)
+    {
+        int start = stations[i]-w;
+        int end = stations[i]+w;
+        if(left < start)
+        {
+            float gap = start - left;
+            answer += ceil(gap / cover);
+        }
+        left = end+1;
+    }
+    if(left <=n)
+    {
+        float gap = n - left + 1;
+        answer += ceil(gap/cover);
+    }
+    return answer;
+}
