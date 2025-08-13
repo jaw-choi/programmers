@@ -2,28 +2,23 @@
 #include <vector>
 using namespace std;
 
-int DP[100001];
-int solution(vector<int> sticker)
-{
-    if(sticker.size()==1)
-        return sticker[0];
-    if(sticker.size()==2)
-        return max(sticker[0],sticker[1]);
-    int answer =0;
-    DP[0]=sticker[0];
-    DP[1]=sticker[0];
-    for(int i=2;i<sticker.size()-1;i++)
-    {
-        DP[i] = max(DP[i-2] + sticker[i], DP[i-1]);
+static int linearDP(const vector<int>& stickers, int startIdx, int endIdx) {
+    int prevMax = 0;      // dp[i-1]
+    int prevPrevMax = 0;  // dp[i-2]
+    for (int i = startIdx; i <= endIdx; ++i) {
+        int currentMax = max(prevMax, prevPrevMax + stickers[i]);
+        prevPrevMax = prevMax;
+        prevMax = currentMax;
     }
-    answer = max(answer,DP[sticker.size()-2]);
-    DP[0]=0;
-    DP[1]=sticker[1];
-    for(int i=2;i<sticker.size();i++)
-    {
-        DP[i] = max(DP[i-2] + sticker[i], DP[i-1]);
-    }
-    answer = max(answer,DP[sticker.size()-1]);
+    return prevMax;
+}
 
-    return answer;
+int solution(vector<int> sticker) {
+    int n = (int)sticker.size();
+    if (n == 1) return sticker[0];
+    if (n == 2) return max(sticker[0], sticker[1]);
+    
+    int case1 = linearDP(sticker, 0, n - 2);
+    int case2 = linearDP(sticker, 1, n - 1);
+    return max(case1, case2);
 }
