@@ -1,29 +1,32 @@
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <map>
-//#include <iostream>
 
 using namespace std;
-
+bool helper(int mid, vector<int>& stones,int k)
+{
+    int cnt = 0;
+    for(int i=0;i<stones.size();i++){
+        if(stones[i] <= mid)
+            cnt++;
+        else
+            cnt = 0;
+        if(cnt>=k)
+            return false;
+    }
+    return true;
+}
 int solution(vector<int> stones, int k) {
-    if(k==1)
-        return *min_element(stones.begin(),stones.end());
-    
-    map<int,int> mp;
-    for(int i=0;i<k;i++)
+    int answer = 0;
+    int left = 0;
+    int right = 200000000;
+    while(left <= right)
     {
-        mp[stones[i]]++;
+        int mid = (right-left)/2 + left;
+        if(!helper(mid,stones,k))
+            right = mid - 1;
+        else
+            left = mid + 1;
+        
     }
-    int answer = mp.rbegin()->first;
-    for(int i=k;i<stones.size();i++)
-    {
-        mp[stones[i]]++;
-        mp[stones[i-k]]--;
-        if(mp[stones[i-k]]==0)
-            mp.erase(stones[i-k]);
-        if(answer>mp.rbegin()->first)
-            answer = mp.rbegin()->first;
-    }
-    return answer;
+    return left;
 }
