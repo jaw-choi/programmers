@@ -1,39 +1,29 @@
-#include <algorithm>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <map>
+//#include <iostream>
 
 using namespace std;
 
 int solution(vector<int> stones, int k) {
+    if(k==1)
+        return *min_element(stones.begin(),stones.end());
     
-    int begin = *min_element(stones.begin(),stones.end());
-    int end = *max_element(stones.begin(),stones.end());
-    int mid = 0;
-    int cnt = 0;
-    int maxSkip = 0;
-    int answer=0;
-    while(begin<=end)
+    map<int,int> mp;
+    for(int i=0;i<k;i++)
     {
-        mid = (begin+end)/2;
-        
-        cnt=0;
-        maxSkip=0;
-        for(int i=0;i<stones.size();i++)
-        {
-            if(stones[i] < mid)
-                cnt++;
-            else
-                cnt=0;
-            maxSkip = max(maxSkip,cnt);
-        }
-        
-        if(maxSkip < k){
-            begin = mid+1;
-            answer = max(answer,mid);
-        }
-        else{
-            end = mid - 1;
-        }
+        mp[stones[i]]++;
+    }
+    int answer = mp.rbegin()->first;
+    for(int i=k;i<stones.size();i++)
+    {
+        mp[stones[i]]++;
+        mp[stones[i-k]]--;
+        if(mp[stones[i-k]]==0)
+            mp.erase(stones[i-k]);
+        if(answer>mp.rbegin()->first)
+            answer = mp.rbegin()->first;
     }
     return answer;
 }
