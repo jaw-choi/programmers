@@ -2,18 +2,7 @@
 #include <vector>
 
 using namespace std;
-long long helper(int i, int j, vector<int>& v)
-{
-    int num1=0,num2=0;
-    int sign  = 1;
-    for(int k=i;k<=j;k++)
-    {
-        num1+= (v[k] * sign);
-        sign*=-1;
-        num2+= (v[k] * sign);
-    }
-    return max(num1,num2);
-}
+
 long long solution(vector<int> sequence) {
     long long answer = -100001;
     int n = sequence.size();
