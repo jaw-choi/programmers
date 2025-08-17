@@ -2,35 +2,45 @@
 #include <string>
 #include <algorithm>
 using namespace std;
-
-int check(string s,int left, int right)
+int palOdd(string& s, int idx)
 {
-    int answer = 0;
-    while(left>=0 && right < s.length())
+    int cnt = 1;
+    int k = 1;
+    while(idx-k>=0 && idx+k<s.length())
     {
-        if(s[left]!=s[right])
+        if(s[idx-k]==s[idx+k])
+            cnt+=2;
+        else
             break;
-        left--,right++;
+        k++;
     }
-    //33
-    //24
-    //15
-    //06
-    //-17
-    return right - left - 1;
+    return cnt;
+}
+int palEven(string& s, int idx)
+{
+    if(idx+1>=s.length())
+        return 0;
+    int cnt = 0;
+    int k = 0;
+    while(idx-k>=0 && idx+k+1<s.length())
+    {
+        if(s[idx-k]==s[idx+k+1])
+            cnt+=2;
+        else
+            break;
+        k++;
+    }
+    return cnt;
 }
 int solution(string s)
 {
-    if(s.length()==1)
-        return 1;
-    int answer= 0;
-    for(int i=0; i <s.length();i++)
+    int answer=0;
+    for(int i=0;i<s.length();i++)
     {
-        int odd = check(s,i,i);
-        int even = check(s,i-1,i);
-        answer = max(answer,max(odd,even));
+        int tmp = max(palOdd(s,i),palEven(s,i));
+        //cout << palOdd(s,i) << " " << palEven(s,i) << endl;
+        answer = max(answer,tmp);
     }
-   
 
     return answer;
 }
