@@ -47,8 +47,8 @@ int solution(vector<vector<int>> board, vector<vector<int>> skill) {
     {
         for(int j=0;j<m;j++)
         {
-            board[i][j]+=preSum[i][j];
-            if(board[i][j] > 0)
+            
+            if(board[i][j]+preSum[i][j] > 0)
                 answer++;
         }
     }
