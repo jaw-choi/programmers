@@ -2,56 +2,55 @@
 #include <vector>
 
 using namespace std;
-//1 - Attack
-//2 - Heal
-//r1,c1 start
-//r2,c2 end
-//degree - amount
-//0이하면 파괴된건물
-//else 파괴x
-//return 파괴x 수
+void helper(vector<vector<int>>& preSum, const vector<vector<int>>& skill,int idx)
+{
+    int type = skill[idx][0];
+    int r1 = skill[idx][1];
+    int c1 = skill[idx][2];
+    int r2 = skill[idx][3];
+    int c2 = skill[idx][4];
+    int degree = skill[idx][5];
+    if(type==1)
+        degree = -degree;
+    
+    preSum[r1][c1] += degree;
+    preSum[r2+1][c1] -= degree;
+    preSum[r1][c2+1] -= degree;
+    preSum[r2+1][c2+1] += degree;
 
-
+}
 int solution(vector<vector<int>> board, vector<vector<int>> skill) {
     int answer = 0;
-    int sum[1002][1002];
-    int type;
-    int x1,x2,y1,y2;
-    int degree;
-    for(auto s : skill)
+    int n = board.size();
+    int m = board[0].size();
+    //type, r1, c1, r2, c2, degree
+    vector<vector<int>> preSum(n+1,vector<int>(m+1,0));
+    for(int i=0;i< skill.size();i++)
     {
-        type = s[0];
-        x1 = s[1];
-        y1 = s[2];
-        x2 = s[3];
-        y2 = s[4];
-        degree = s[5];
-        degree = type == 1 ? degree * -1 : degree;
-        sum[x1][y1] += degree;
-        sum[x2+1][y2+1] += degree;
-        sum[x1][y2+1] -= degree;
-        sum[x2+1][y1] -= degree;
+        helper(preSum,skill,i);
     }
-    for (int i = 0; i <= board.size(); i++) {
-        for (int j = 0; j < board[0].size(); j++) {
-            sum[i][j + 1] += sum[i][j];
-        }
-    }
- 
-    for (int j = 0; j <= board[0].size(); j++) {
-        for (int i = 0; i < board.size(); i++) {
-            sum[i + 1][j] += sum[i][j];
-        }
-    }
-    
-    for(int i=0;i<board.size();i++)//100
+    for(int i=0;i<n+1;i++)
     {
-        for(int j=0;j<board[0].size();j++)//100
+        for(int j=1;j<m+1;j++)
         {
-            if(board[i][j]+sum[i][j]>0)
+            preSum[i][j] +=preSum[i][j-1];
+        }
+    }
+    for(int j=0;j<m+1;j++)
+    {
+        for(int i=1;i<n+1;i++)
+        {
+            preSum[i][j] +=preSum[i-1][j];
+        }
+    }
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            board[i][j]+=preSum[i][j];
+            if(board[i][j] > 0)
                 answer++;
         }
     }
-    
     return answer;
 }
