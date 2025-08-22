@@ -1,50 +1,29 @@
 #include <string>
 #include <vector>
-#include <map>
-#include <queue>
 
 using namespace std;
-
+void dfs(int curr, int& ans,vector<int>& visited, const vector<vector<int>>& computers )
+{
+    
+    for(int i=0;i<computers[curr].size();i++)
+    {
+        if(visited[i]==1) continue;
+        if(computers[curr][i]==1){
+            visited[i] = 1;
+            dfs(i,ans,visited,computers);
+        }
+    }
+}
 int solution(int n, vector<vector<int>> computers) {
     int answer = 0;
-
-    map<int,vector<int>> mp;
-    vector<int> visited(n+1,0);
-    
-    for(int i=0;i<n;i++)
+    vector<int> visited(n,0);
+    for(int i=0;i<computers.size();i++)
     {
-        for(int j=0;j<n;j++)
-        {
-            if(computers[i][j]==1)
-                mp[i].push_back(j);
+        if(visited[i]==0){
+            answer++;
+            visited[i]=1;
+            dfs(i,answer,visited,computers);
         }
     }
-    for(int i=0;i<n;i++)
-    {
-
-        if(visited[i]==1) continue;
-        answer++;
-        visited[i] =1;
-        queue<int> q;
-        q.push(i);
-        while(!q.empty())
-        {
-            int curr = q.front();
-            q.pop();
-            for(int j=0;j<mp[curr].size();j++)
-            {
-                int next = mp[curr][j];
-                if(visited[next]==1) continue;
-                visited[next]=1;
-                q.push(next);
-            }
-        }
-    }
-
     return answer;
 }
-
-
-
-
-
