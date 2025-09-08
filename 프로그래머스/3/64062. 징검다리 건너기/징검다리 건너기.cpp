@@ -1,32 +1,41 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
-bool helper(int mid, vector<int>& stones,int k)
-{
-    int cnt = 0;
-    for(int i=0;i<stones.size();i++){
-        if(stones[i] <= mid)
-            cnt++;
-        else
-            cnt = 0;
-        if(cnt>=k)
-            return false;
-    }
-    return true;
-}
+
 int solution(vector<int> stones, int k) {
     int answer = 0;
-    int left = 0;
-    int right = 200000000;
-    while(left <= right)
+    int left = 1;
+    int right = *max_element(stones.begin(),stones.end());
+    int consecutive = 0;
+    bool ok = true;
+    while(left<=right)
     {
         int mid = (right-left)/2 + left;
-        if(!helper(mid,stones,k))
-            right = mid - 1;
-        else
-            left = mid + 1;
-        
+        consecutive = 0;
+        ok = true;
+        for(auto& s : stones)
+        {
+            if(s < mid)
+            {
+                consecutive++;
+                if(consecutive>=k){
+                    ok = false;
+                    break;
+                }
+            }
+            else{
+                consecutive = 0;
+            }
+        }
+        if(ok){
+            answer = mid;
+            left = mid+1;
+        }
+        else{
+            right = mid-1;
+        }
     }
-    return left;
+    return answer;
 }
