@@ -56,20 +56,21 @@ for (string& log : logs) {
     int end = getSeconds(token);
 
     timeline[start] += 1;
-    timeline[end ] -= 1; // 닫힌 구간
+    timeline[end ] -= 1; 
 }
 
 for (int i = 1; i <= play_time_seconds; i++)
     timeline[i] += timeline[i - 1];
-
+    
 for (int i = 1; i <= play_time_seconds; i++)
-    preSum[i] = preSum[i - 1] + timeline[i];
+    timeline[i] += timeline[i - 1];
+
 
 long long res = -1;
 int k = 0;
 for (int i = 0; i + adv_time_seconds <= play_time_seconds; i++) {
-    int end = i + adv_time_seconds - 1; // 반열린 구간 [i, i+adv_time_seconds)
-    long long cnt = preSum[end] - (i > 0 ? preSum[i-1] : 0);
+    int end = i + adv_time_seconds -1 ; 
+    long long cnt = timeline[end] - (i > 0 ? timeline[i-1] : 0);
     if (cnt > res) {
         res = cnt;
         k = i;
