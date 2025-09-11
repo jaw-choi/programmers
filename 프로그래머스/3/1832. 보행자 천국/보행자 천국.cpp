@@ -25,5 +25,5 @@ int solution(int m, int n, vector<vector<int>> city_map) {
         }
     }
 
-    return (dp[m][n][1]) % MOD;
+    return (dp[m][n][0]) % MOD;
 }
