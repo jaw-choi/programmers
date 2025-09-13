@@ -1,36 +1,31 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
-bool helper(const int n,const long long total,const vector<int>& times)
-{
-    long long num = 0;
-    for(int i=0;i<times.size();i++)
-    {
-        num += total / times[i];
-    }
-    return n <= num;
-}
+
 long long solution(int n, vector<int> times) {
     long long answer = 0;
-    sort(times.begin(),times.end());
-    
-    long long left = 0;
-    long long right = 1e18;
-    long long mid;
+    long long left= 0;
+    long long right = (long long)n * (1e9);
+    long long cnt = 0;
     while(left<=right)
     {
-        mid = (left+right)/2;
-        if(helper(n,mid,times))
+        long long mid = (long long)(right-left)/2 + left;
+        cnt = 0;
+        for(int i=0;i<times.size();i++)
+        {
+            cnt += (long long)(mid/times[i]);
+        }
+        if(cnt >= n)
         {
             answer = mid;
             right = mid - 1;
         }
         else
-        {
-            left = mid + 1;
-        }
+            left = mid+1;
+        //cout << answer <<endl;
     }
     return answer;
 }
