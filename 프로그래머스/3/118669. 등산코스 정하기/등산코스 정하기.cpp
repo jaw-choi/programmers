@@ -5,9 +5,6 @@
 using namespace std;
 #define INF 1e9
 
-using namespace std;
-#define INF 1e9
-
 vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector<int> summits) {
     vector<int> answer;
     //vector<vector<pair<int,int>>> graph(n+1,{});
