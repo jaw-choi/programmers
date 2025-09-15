@@ -2,61 +2,67 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-using namespace std;
 #define INF 1e9
+
+using namespace std;
 
 vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector<int> summits) {
     vector<int> answer;
-    //vector<vector<pair<int,int>>> graph(n+1,{});
     vector<vector<pair<int,int>>> graph(n+1);
-    int minResult = INF;
-    for(auto p : paths)
+    for(auto& p : paths)
     {
-        int i = p[0];
-        int j = p[1];
+        int u = p[0];
+        int v = p[1];
         int w = p[2];
-        graph[i].push_back({j,w});
-        graph[j].push_back({i,w});
+        graph[u].push_back({v,w});
+        graph[v].push_back({u,w});
     }
     
-
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<>> pq;
-        vector<int> dist(n+1,INF);
-    vector<bool> isSummit(n+1, false);
-for (int s : summits) isSummit[s] = true;
-    for(int g : gates) {
+    vector<int> dist(n+1,INF);
+    vector<int> isSum(n+1,false);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<>> pq;
+    
+    for(auto& g : gates)
+    {
         dist[g] = 0;
-        pq.push({0, g});
+        pq.push({dist[g],g});
     }
+    
+    for(auto& s : summits)
+    {
+        isSum[s] = true;
+    }
+    
+    while(!pq.empty())
+    {
+        auto [d,curr] = pq.top();
+        pq.pop();
         
-        while(!pq.empty())
+        if(dist[curr] < d) continue;
+        if(isSum[curr]) continue;
+        
+        for(auto& g : graph[curr])
         {
-            int d = pq.top().first;
-            int curr = pq.top().second;
-            pq.pop();
-            if(d > dist[curr]) continue;
-            if(isSummit[curr]) continue;
-            for(auto node : graph[curr])
-            {
-                int next = node.first;
-                int weight = node.second;
-                int nd = max(d,weight);
-                if(dist[next] > nd){
-                    dist[next] = nd;
-                    pq.push({nd,next});
-                }
+            int next = g.first;
+            int weight = g.second;
+            int intesity = max(d,weight);
+            if(dist[next] > intesity){
+                dist[next] = intesity;
+                pq.push({dist[next],next});
             }
         }
-sort(summits.begin(), summits.end());
-int bestSummit = -1, bestIntensity = INF;
-for(int s : summits) {
-    if(dist[s] < bestIntensity) {
-        bestSummit = s;
-        bestIntensity = dist[s];
     }
-}
-
-
-
-     return {bestSummit, bestIntensity};
+    sort(summits.begin(),summits.end());
+    int peak = 0;
+    int minIntensity = INF;
+    for(int i=0;i<summits.size();i++)
+    {
+        if(dist[summits[i]] < minIntensity)
+        {
+            peak = summits[i];
+            minIntensity = dist[summits[i]];
+        }
+    }
+    
+    return {peak,minIntensity};
 }
