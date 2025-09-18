@@ -1,24 +1,36 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 long long solution(vector<int> sequence) {
-    long long answer = -100001;
+    long long answer = 0;
+    long long cnt1 = 0;
+    long long cnt2 = 0;
     int n = sequence.size();
-    long long currA = 0, currB = 0;
-    long long bestA = 0, bestB = 0;
+    vector<int> v1 = sequence;
+    vector<int> v2 = sequence;
     for(int i=0;i<n;i++)
     {
-        long long a = (i%2==0) ? sequence[i] : -sequence[i];
-        long long b = -a;
-        
-        currA = max(a,currA+a);
-        currB = max(b,currB+b);
-        
-        bestA = max(currA,bestA);
-        bestB = max(currB,bestB);
-        
+        if(i%2==0)
+            v1[i]=-v1[i];
+        else
+            v2[i]=-v2[i];
     }
-    return max(bestA,bestB);
+    for(int i=0;i<n;i++)
+    {
+        if(cnt1 < 0)
+            cnt1 = v1[i];
+        else
+            cnt1 += v1[i];
+        if(cnt2 < 0)
+            cnt2 = v2[i];
+        else
+            cnt2 += v2[i];
+        answer = max(answer,cnt1);
+        answer = max(answer,cnt2);
+    }
+    //cout << answer;
+    return answer;
 }
