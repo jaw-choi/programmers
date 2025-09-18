@@ -6,27 +6,23 @@ using namespace std;
 
 long long solution(int n, vector<int> works) {
     long long answer = 0;
-    priority_queue<int,vector<int>> pq;
-    for(auto w : works)
+    priority_queue<int> work(works.begin(),works.end());
+    while(n!=0)
     {
-        pq.push(w);
-    }
-    while(!pq.empty())
-    {
-        if(n==0)
-            break;
-        int num = pq.top();
-        pq.pop();
+        if(work.empty())
+            return 0;
+        int num = work.top();
+        work.pop();
         num--;
+        if(num!=0)
+            work.push(num);
         n--;
-        pq.push(num);
     }
-    while(!pq.empty())
+    while(!work.empty())
     {
-        int tmp = pq.top();
-        pq.pop();
-        if(tmp>=0)
-            answer += (tmp*tmp);
+        int num = work.top();
+        work.pop();
+        answer += ( num * num);
     }
     return answer;
 }
