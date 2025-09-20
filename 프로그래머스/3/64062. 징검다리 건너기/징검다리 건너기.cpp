@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -35,6 +36,7 @@ int solution(vector<int> stones, int k) {
         else{
             right = mid-1;
         }
+        //cout << mid <<endl;
     }
     return answer;
 }
