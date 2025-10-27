@@ -2,44 +2,35 @@
 #include<queue>
 using namespace std;
 
-vector<pair<int,int>> dir = {{-1,0},{1,0},{0,-1},{0,1}};
-
+vector<int> dirY = {-1,1,0,0};
+vector<int> dirX = {0,0,-1,1};
 int solution(vector<vector<int> > maps)
 {
-    int answer = 10001;
+    int answer = 0;
     int n = maps.size();
     int m = maps[0].size();
-    vector<vector<bool>> visited(n, vector<bool>(m, false));
+    vector<vector<int>> visited(n,vector<int>(m,0));
     queue<pair<pair<int,int>,int>> q;
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<m;j++)
-        {
-            if(maps[i][j]==0)
-                visited[i][j]=true;
-        }
-    }
     q.push({{0,0},1});
+    visited[0][0]=1;
     while(!q.empty())
     {
-        auto [curr,cnt] = q.front();
-        int x = curr.first;
-        int y = curr.second;
+        auto[pos,cnt] = q.front();
+        int currY = pos.first;
+        int currX = pos.second;
         q.pop();
-        
-        if(x==n-1 && y==m-1)
+        if(currY==n-1 && currX == m-1)
             return cnt;
-        for(auto d : dir){
-            int nextX = x + d.first;
-            int nextY = y + d.second;
-            if(nextX >=0 && nextX <n &&nextY>=0&&nextY<m){
-                if(visited[nextX][nextY]==false && maps[nextX][nextY]==1){
-                    visited[nextX][nextY]=true;
-                    q.push({{nextX,nextY},cnt+1});
-                }
-            }
+        for(int i=0;i<4;i++)
+        {
+            int ny = currY + dirY[i];
+            int nx = currX + dirX[i];
+            if(ny<0 || nx<0 || ny>=n || nx>=m) continue;
+            if(maps[ny][nx]==0) continue;
+            if(visited[ny][nx]) continue;
+            visited[ny][nx]=1;
+            q.push({{ny,nx},cnt+1});
         }
-        
     }
     return -1;
 }
